@@ -11,7 +11,6 @@ def main():
         decode_input = input("Quel texte voulez vous decoder?")
         return decode(decode_input)
 
-
 def code(texte):
     dic = compte(texte)
     arbre = creer_arbre(dic)
@@ -102,6 +101,13 @@ def creer_table_auxiliaire(arbre, cle):
 
 
 def encoder_txt(tab, txt):
+    liste = ''
+    for c in txt:
+        liste += tab[c]
+    return liste
+
+
+def encoder_txt (tab,txt):
     liste = ''
     for c in txt:
         liste += tab[c]
