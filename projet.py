@@ -48,10 +48,12 @@ def loadFile(path):
     return str
 
 def bintoint(s):
-    
+    """
+    Permet de convertir une chaine caractère (de taille infini) en un seul et unique grand nombre qui pourra être séparé en bytes ensuite. Python permet de stocker des nombres infinis
+    """
     val = 0
     for i in range(len(s)):
-        val = val + int((ord(s[len(s)-i-1])-48)*2**i)
+        val += 2**i if s[len(s)-i-1] == "1" else 0
     return val
 
 def saveFileEncode(path, table, encodeds):
