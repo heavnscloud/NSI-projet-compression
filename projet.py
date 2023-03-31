@@ -11,6 +11,7 @@ def main():
         decode_input = input("Quel texte voulez vous decoder?")
         return decode(decode_input)
 
+
 def code(texte):
     dic = compte(texte)
     arbre = creer_arbre(dic)
@@ -39,22 +40,34 @@ class Arbre:
             poid += self.droit.poid
         self.poid = poid
 
-    def afficher_bis(self):
+    def afficher(self):
         strings = {}
-        self.ajouter_au_afficher(0, 0, strings)
+        self.auxiliaire_afficher(0, 0, strings)
         current = 0
         while current in strings:
             print(strings[current])
             current += 1
 
-    def ajouter_au_afficher(self, floor, decalage, strings):
+    def auxiliaire_afficher(self, etage_noeud, decalage, liste_etages):
+        lettre = (self.lettre if self.lettre else "")
+
         if self.gauche is not None:
-            decalage = self.gauche.ajouter_au_afficher(floor + 1, decalage, strings)
-        strings[floor] = ((strings[floor] + " " * (decalage - len(strings[floor]))) if (
-                floor in strings) else " " * decalage) + str(self.poid) + (str(self.lettre) if self.lettre else "")
-        decalage += len(str(self.poid) + (str(self.lettre) if self.lettre else ""))
+            decalage = self.gauche.auxiliaire_afficher(etage_noeud + 1, decalage, liste_etages)
+
+        # Permet de s'ajouter à la liste tout en gardant les nœuds à gauche et en prenant en compte le décalage
+        liste_etages[etage_noeud] = \
+            (
+                (
+                        liste_etages[etage_noeud] + " " * (decalage - len(liste_etages[etage_noeud]))
+                ) if (
+                        etage_noeud in liste_etages
+                ) else " " * decalage
+            ) + str(self.poid) + lettre
+        decalage += len(str(self.poid) + lettre)
+
         if self.droit is not None:
-            decalage = self.droit.ajouter_au_afficher(floor + 1, decalage, strings)
+            decalage = self.droit.auxiliaire_afficher(etage_noeud + 1, decalage, liste_etages)
+
         return decalage
 
 
@@ -101,13 +114,6 @@ def creer_table_auxiliaire(arbre, cle):
 
 
 def encoder_txt(tab, txt):
-    liste = ''
-    for c in txt:
-        liste += tab[c]
-    return liste
-
-
-def encoder_txt (tab,txt):
     liste = ''
     for c in txt:
         liste += tab[c]
