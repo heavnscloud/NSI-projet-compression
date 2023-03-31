@@ -15,7 +15,7 @@ def main():
 def code(texte):
     dic = compte(texte)
     arbre = creer_arbre(dic)
-    table = creer_table(dic, arbre)
+    table = creer_table(arbre)
     return encoder_txt(table, texte)
 
 
