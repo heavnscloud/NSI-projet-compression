@@ -10,15 +10,19 @@ Ce projet a pour but de créer un système de compression de fichiers avec la m�
 ## Contraintes
 
 - Compresser et décompresser un texte donné en entrée d'une fonction
-- Compression minimale de 40% sur les gros textes
-- Utiliser l'algorithme vu en classe
-- N'utiliser aucun module
-- Calculer le gain de compression, sans obligatoirement convertir en binaire
+  - [X] Compresser
+  - [ ] Décompresser
+- [ ] Compression minimale de 40% sur les gros textes
+- [X] Utiliser l'algorithme vu en classe
+- [ ] N'utiliser aucun module
+- [ ] Calculer le gain de compression, sans obligatoirement convertir en binaire
 
 ## Bonus
 
 - Enregistrement et chargement de fichiers
-- Conversion en binaire du texte compressé, c'est-à-dire que le string de 0 et de 1 doit devenir un string de lettres
+  - [X] Enregistrement
+  - [ ] Chargement
+- [X] Conversion en binaire du texte compressé, c'est-à-dire que le string de 0 et de 1 doit devenir un string de lettres
 
 # Note aux élèves du groupe
 
