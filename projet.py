@@ -101,4 +101,8 @@ def saveFileEncode(path, table, encodeds):
             f.write(table[el].encode("ascii"))
         
         #chaine:
-        f.write(encodedval.to_bytes(len(encodeds)//8+1,"little"))
+        # Convertit un entier en bytes. Le nombre de bytes est calculé de façon à diviser en groupes de 8, avec un groupe minimum. Rappel : le // est prioritaire.
+        f.write(encodedval.to_bytes(\
+            len(encodeds)//8 +1,\
+            "little")\
+        )
