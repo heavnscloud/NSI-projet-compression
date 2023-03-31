@@ -8,8 +8,8 @@ def main():
         encode = input("Quel texte voulez vous encoder?")
         return code(encode)
     elif enco_deco == "decoder":
-        decode = input("Quel texte voulez vous decoder?")
-        return decoder(decode)
+        decode_input = input("Quel texte voulez vous decoder?")
+        return decode(decode_input)
 
 
 def code(texte):
@@ -101,7 +101,7 @@ def creer_table_auxiliaire(arbre, cle):
         return dico1
 
 
-def encoder_txt (tab,txt):
+def encoder_txt(tab, txt):
     liste = ''
     for c in txt:
         liste += tab[c]
@@ -113,4 +113,4 @@ def decode():
 
 
 if __name__ == "__name__":
-    print(creer_table(creer_arbre(compte())))
+    print(creer_table(creer_arbre(compte("Je manges une pomme rouge et verte"))))
