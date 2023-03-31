@@ -30,7 +30,7 @@ def compte(texte):
 
 
 class Arbre:
-    def __init__(self, gauche, droit, lettre = None, poid = 0):
+    def __init__(self, gauche, droit, lettre=None, poid=0):
         self.gauche = gauche
         self.droit = droit
         self.lettre = lettre
@@ -39,19 +39,6 @@ class Arbre:
         if self.droit:
             poid += self.droit.poid
         self.poid = poid
-
-    def __str__(self):
-        print("("+str(self.poid),end="")
-        if self.lettre:
-            print(self.lettre,end="")
-        else:
-            self.gauche.__str__()
-            self.droit.__str__()
-        print(")",end="")
-
-    def __repr__(self):
-        self.__str__()
-        return ""
 
     def afficher_bis(self):
         strings = {}
@@ -64,7 +51,8 @@ class Arbre:
     def ajouter_au_afficher(self, floor, decalage, strings):
         if self.gauche is not None:
             decalage = self.gauche.ajouter_au_afficher(floor + 1, decalage, strings)
-        strings[floor] = ((strings[floor] + " " * (decalage-len(strings[floor]))) if (floor in strings) else " " * decalage) + str(self.poid) + (str(self.lettre) if self.lettre else "")
+        strings[floor] = ((strings[floor] + " " * (decalage - len(strings[floor]))) if (
+                floor in strings) else " " * decalage) + str(self.poid) + (str(self.lettre) if self.lettre else "")
         decalage += len(str(self.poid) + (str(self.lettre) if self.lettre else ""))
         if self.droit is not None:
             decalage = self.droit.ajouter_au_afficher(floor + 1, decalage, strings)
@@ -100,15 +88,16 @@ def creer_arbre(dictionnaire_lettres):
 
 def creer_table(arbre):
     dico1 = creer_table_auxiliaire(arbre.gauche, "0")
-    dico2.update(creer_table_auxiliaire(arbre.droit, "1"))
+    dico1.update(creer_table_auxiliaire(arbre.droit, "1"))
     return dico1
+
 
 def creer_table_auxiliaire(arbre, cle):
     if arbre.lettre:
         return {cle: arbre.lettre}
     else:
         dico1 = creer_table_auxiliaire(arbre.gauche, cle + "0")
-        dico2.update(creer_table_auxiliaire(arbre.droit, cle + "1"))
+        dico1.update(creer_table_auxiliaire(arbre.droit, cle + "1"))
         return dico1
 
 
@@ -121,3 +110,7 @@ def encoder_txt (tab,txt):
 
 def decode():
     pass
+
+
+if __name__ == "__name__":
+    print(creer_table(creer_arbre(compte())))
