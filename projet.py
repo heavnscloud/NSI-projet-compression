@@ -106,3 +106,56 @@ def saveFileEncode(path, table, encodeds):
             len(encodeds)//8 +1,\
             "little")\
         )
+def inttobin(n):
+    """
+    convertis d'un int vers une chaine de caractère binaire
+
+    paramètre:
+    n: notre int à convertir
+
+    return: chaine de caractère composée de "0" et de "1"
+    """
+    s = ""
+    while n>0 or s=="":
+        s = str(n%2) + s
+        n = n//2
+    return s
+
+def loadFileDecode(path):
+    """
+    charge la table et la chaine encodée depuis un fichier spécifié
+    format:
+        header: 
+            identifieur "HCS" (Huffman Compressing System)  (3 octets)
+            taille table (octets)                           (4 octets)
+            taille chaine compressée (bits)                 (4 octets)
+        entrée de table:
+            taille clé de table                             (1 octet)
+            clé de table                                    (1 octet)
+            caractère ASCII                                 (1 octet)
+        chaine compressée:
+            valeur binaire                                  (équivalente à (taille chaine compressée)//8 + 1 bytes)
+            (optionel) padding                              (équivalente à (7-(taille chaine compressée))%8 bytes)
+    paramètres:
+    path: chemin d'accès vers le fichier depuis lequel nous souhaitons récupérer nos données compressées
+
+    return:
+    (bink: table de codage, pour décompresser les données
+    data: nos données compressées) ou None si le fichier n'est pas valide (aucune vérification n'est faite mise à part l'en-tête du fichier, du moins pour l'instant)
+    """
+
+    bink = {} #ce sera notre table
+
+    with open(path, "rb") as f:
+        if f.read(3)!=b"HCS": #verifier que le fichier soit bien à notre format
+            print("the file is not a HCS file")
+            return None #il faudra détecter que la fonction ne retourne pas None.
+        keylen = int.from_bytes(f.read(4),"little") 
+        datalen = int.from_bytes(f.read(4),"little") 
+
+        for _ in range(keylen//3): #boucle pour récupérer notre table, et en faire un dictionnaire
+            bitlen = int.from_bytes(f.read(1), "little")
+            tmpk = inttobin(int.from_bytes(f.read(1), "little") & 2**bitlen-1) #le & ici représente un opérateur "et" logique, cela sert à construire un masque de bits, pour récupérer seulement la partie qui nous intéresse dans l'octet.
+            bink[tmpk] = f.read(1).decode("ascii")
+        data = inttobin(int.from_bytes(f.read(datalen//8+1), "little") & 2**datalen-1) 
+    return bink,data
