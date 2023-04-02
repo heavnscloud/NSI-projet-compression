@@ -3,27 +3,130 @@
 # ======================================== #
 
 def main():
-    pass
+    enco_deco = input("Voulez vous encoder ou decoder votre texte?")
+    if enco_deco == "encoder":
+        encode = input("Quel texte voulez vous encoder?")
+        return code(encode)
+    elif enco_deco == "decoder":
+        decode_input = input("Quel texte voulez vous decoder?")
+        return decode(decode_input)
 
 
-def code():
-    pass
+def code(texte):
+    dic = compte(texte)
+    arbre = creer_arbre(dic)
+    table = creer_table(arbre)
+    return encoder_txt(table, texte)
 
 
-def compte():
-    pass
+def compte(texte):
+    dic = {}
+    for caractere in texte:
+        if caractere in dic:
+            dic[caractere] += 1
+        else:
+            dic[caractere] = 1
+    return dic
 
 
-def creer_arbre():
-    pass
+class Arbre:
+    def __init__(self, gauche, droit, lettre=None, poid=0):
+        self.gauche = gauche
+        self.droit = droit
+        self.lettre = lettre
+        if self.gauche:
+            poid += self.gauche.poid
+        if self.droit:
+            poid += self.droit.poid
+        self.poid = poid
+
+    def afficher(self):
+        strings = {}
+        self.auxiliaire_afficher(0, 0, strings)
+        current = 0
+        while current in strings:
+            print(strings[current])
+            current += 1
+
+    def auxiliaire_afficher(self, etage_noeud, decalage, liste_etages):
+        lettre = (self.lettre if self.lettre else "")
+
+        if self.gauche is not None:
+            decalage = self.gauche.auxiliaire_afficher(etage_noeud + 1, decalage, liste_etages)
+
+        # Permet de s'ajouter à la liste tout en gardant les nœuds à gauche et en prenant en compte le décalage
+        liste_etages[etage_noeud] = \
+            (
+                (
+                        liste_etages[etage_noeud] + " " * (decalage - len(liste_etages[etage_noeud]))
+                ) if (
+                        etage_noeud in liste_etages
+                ) else " " * decalage
+            ) + str(self.poid) + lettre
+        decalage += len(str(self.poid) + lettre)
+
+        if self.droit is not None:
+            decalage = self.droit.auxiliaire_afficher(etage_noeud + 1, decalage, liste_etages)
+
+        return decalage
 
 
-def creer_table():
-    pass
+def creer_arbre(dictionnaire_lettres):
+    arbres = []
+    for item in dictionnaire_lettres.items():
+        arbres.append(Arbre(None, None, lettre=item[0], poid=item[1]))
+
+    def poid(arbre):
+        return arbre.poid
+
+    arbres.sort(key=poid)
+    while len(arbres) > 1:
+        a0 = arbres.pop(0)
+        a1 = arbres.pop(0)
+
+        nouveau_arbre = Arbre(a0, a1)
+
+        index = 0
+        while index < len(arbres) and nouveau_arbre.poid > arbres[index].poid:
+            index += 1
+
+        if index == len(arbres):
+            arbres.append(nouveau_arbre)
+        else:
+            arbres.insert(index, nouveau_arbre)
+
+    return arbres[0]
+
+
+def creer_table(arbre):
+    dico1 = creer_table_auxiliaire(arbre.gauche, "0")
+    dico1.update(creer_table_auxiliaire(arbre.droit, "1"))
+    return dico1
+
+
+def creer_table_auxiliaire(arbre, cle):
+    if arbre.lettre:
+        return {cle: arbre.lettre}
+    else:
+        dico1 = creer_table_auxiliaire(arbre.gauche, cle + "0")
+        dico1.update(creer_table_auxiliaire(arbre.droit, cle + "1"))
+        return dico1
+
+
+def encoder_txt(tab, txt):
+    liste = ''
+    for c in txt:
+        liste += tab[c]
+    return liste
 
 
 def decode():
     pass
+
+
+if __name__ == "__name__":
+    print(creer_table(creer_arbre(compte("Je manges une pomme rouge et verte"))))
+
 
 def saveFile(path, s):
     """
@@ -71,7 +174,6 @@ def saveFileEncode(path, table, encodeds):
         chaine compressée:
             valeur binaire
             (optionel) padding
-
     paramètres:
     path: chemin d'accès vers le fichier dans lequel nous souhaitons sauvegarder notre compression
     table: notre table, qui encode nos différents caractères en chaines de bits
@@ -106,6 +208,7 @@ def saveFileEncode(path, table, encodeds):
             len(encodeds)//8 +1,\
             "little")\
         )
+
 def inttobin(n):
     """
     convertis d'un int vers une chaine de caractère binaire
