@@ -221,7 +221,7 @@ def saveFileEncode(path, table, encodeds):
             "little")\
         )
 
-def inttobin(n):
+def int_to_bin(n):
     """
     convertis d'un int vers une chaine de caractère binaire
 
