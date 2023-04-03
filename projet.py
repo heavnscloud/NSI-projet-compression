@@ -127,13 +127,11 @@ def decoder_txt (tab, texte):
     '''
     txt = ''
     num = ''
-    lst_val = list(tab.values()) #liste des valeurs de tab
-    lst_cle = list(tab.keys()) #liste des clés de tab
     for c in texte:
         num += c
-        for j in range (len(lst_val)):
-            if num == lst_val[j]:
-                txt += lst_cle[j]
+        for item in tab.items(): # .items() récupère une liste de tuples (cle, valeur)
+            if num == item[1]:
+                txt += item[0]
                 num = ''
     return txt
 
