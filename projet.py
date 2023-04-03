@@ -120,8 +120,20 @@ def encoder_txt(tab, txt):
     return liste
 
 
-def decode():
-    pass
+def decoder_txt (tab, texte):
+    '''Cette fonction prend en paramètre une liste et une suite de nombres binaires.
+    Elle permet de traduire le texte binaire.
+    Elle renvoie un texte.
+    '''
+    txt = ''
+    num = ''
+    for c in texte:
+        num += c
+        for item in tab.items(): # .items() récupère une liste de tuples (cle, valeur)
+            if num == item[1]:
+                txt += item[0]
+                num = ''
+    return txt
 
 
 if __name__ == "__name__":
@@ -262,3 +274,4 @@ def loadFileDecode(path):
             bink[tmpk] = f.read(1).decode("ascii")
         data = inttobin(int.from_bytes(f.read(datalen//8+1), "little") & 2**datalen-1) 
     return bink,data
+
