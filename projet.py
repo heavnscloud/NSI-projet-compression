@@ -16,7 +16,7 @@ def code(texte):
     dic = compte(texte)
     arbre = creer_arbre(dic)
     table = creer_table(arbre)
-    return encoder_txt(table, texte)
+    return table, encoder_txt(table, texte)
 
 
 def compte(texte):
@@ -106,7 +106,7 @@ def creer_table(arbre):
 
 def creer_table_auxiliaire(arbre, cle):
     if arbre.lettre:
-        return {cle: arbre.lettre}
+        return {arbre.lettre: cle}
     else:
         dico1 = creer_table_auxiliaire(arbre.gauche, cle + "0")
         dico1.update(creer_table_auxiliaire(arbre.droit, cle + "1"))
@@ -136,23 +136,20 @@ def decoder_txt (tab, texte):
     return txt
 
 
-if __name__ == "__name__":
-    print(creer_table(creer_arbre(compte("Je manges une pomme rouge et verte"))))
-
-
-def saveFile(path, s):
+def save_file(path, s):
     """
     sauvegarde une string (format ascii) dans un fichier, grâce au chemin fourni.
     paramètre path: chemin d'accès du fichier
     paramètre s: string à sauvegarder
     return: None
     """
-    bytes = s.encode("ascii")
-    with open(path,"wb") as f:
-        f.write(bytes)
+    file_bytes = s.encode("ascii")
+    with open(path, "wb") as f:
+        f.write(file_bytes)
     return
 
-def loadFile(path):
+
+def load_file(path):
     """
     crèe un string (format ascii) en ouvrant un fichier, grâce au chemin fourni.
     paramètre path: chemin d'accès du fichier
@@ -162,20 +159,22 @@ def loadFile(path):
         str = f.read().decode("ascii")
     return str
 
-def bintoint(s):
+
+def bin_to_int(s):
     """
     Permet de convertir une chaine caractère (de taille infini) en un seul et unique grand nombre qui pourra être séparé en bytes ensuite. Python permet de stocker des nombres infinis
     """
     val = 0
     for i in range(len(s)):
-        val += 2**i if s[len(s)-i-1] == "1" else 0
+        val += 2 ** i if s[len(s) - i - 1] == "1" else 0
     return val
 
-def saveFileEncode(path, table, encodeds):
+
+def save_file_encode(path, table, encodeds):
     """
     sauvegarde la table et la chaine encodée dans le fichier spécifié
     format:
-        header: 
+        header:
             identifieur "HCS" (Huffman Compressing System)
             taille table (bytes)
             taille chaine compressée (bits)
@@ -190,36 +189,37 @@ def saveFileEncode(path, table, encodeds):
     path: chemin d'accès vers le fichier dans lequel nous souhaitons sauvegarder notre compression
     table: notre table, qui encode nos différents caractères en chaines de bits
     encodeds: string contenant des 1 et des 0, donc les bits une fois notre texte encodé
-    
+
     return: None
     """
     k = table.keys()
     bink = {}
     for el in k:
-        bink[el] =  bintoint(el)
-    
-    encodedval = bintoint(encodeds)
-    with open(path, "wb+") as f:
-        #header:
-        f.write(b"HCS")
-        f.write((len(bink)*3).to_bytes(4,"little"))
-        f.write(len(encodeds).to_bytes(4,"little"))
+        bink[el] = bin_to_int(el)
 
-        #table:
+    encodedval = bin_to_int(encodeds)
+    with open(path, "wb+") as f:
+        # header:
+        f.write(b"HCS")
+        f.write((len(bink) * 3).to_bytes(4, "little"))
+        f.write(len(encodeds).to_bytes(4, "little"))
+
+        # table:
         for el in k:
-            print(len(el).to_bytes(1,"little"))
-            print(bink[el].to_bytes(1,"little"))
+            print(len(el).to_bytes(1, "little"))
+            print(bink[el].to_bytes(1, "little"))
             print(table[el].encode("ascii"))
-            f.write(len(el).to_bytes(1,"little"))
-            f.write(bink[el].to_bytes(1,"little"))
+            f.write(len(el).to_bytes(1, "little"))
+            f.write(bink[el].to_bytes(1, "little"))
             f.write(table[el].encode("ascii"))
-        
-        #chaine:
-        # Convertit un entier en bytes. Le nombre de bytes est calculé de façon à diviser en groupes de 8, avec un groupe minimum. Rappel : le // est prioritaire.
-        f.write(encodedval.to_bytes(\
-            len(encodeds)//8 +1,\
-            "little")\
+
+        # chaine: Convertit un entier en bytes. Le nombre de bytes est calculé de façon à diviser en groupes de 8,
+        # avec un groupe minimum. Rappel : le // est prioritaire.
+        f.write(encodedval.to_bytes(
+            len(encodeds) // 8 + 1,
+            "little")
         )
+
 
 def int_to_bin(n):
     """
@@ -276,3 +276,11 @@ def load_file_decode(path):
         data = int_to_bin(int.from_bytes(fichier.read(taille_donnees//8+1), "little") & 2**taille_donnees-1) 
     return table_retour,data
 
+
+if __name__ == "__main__":
+    print(creer_table(creer_arbre(compte("Je manges une pomme rouge et verte"))))
+    current_val = main()
+    print()
+    print(current_val)
+    print(bin_to_int(current_val))
+    print(decode(*main()))
