@@ -185,7 +185,6 @@ def save_file_encode(path, table, encodeds):
         chaine compressée:
             valeur binaire
             (optionel) padding
-
     paramètres:
     path: chemin d'accès vers le fichier dans lequel nous souhaitons sauvegarder notre compression
     table: notre table, qui encode nos différents caractères en chaines de bits
@@ -220,6 +219,62 @@ def save_file_encode(path, table, encodeds):
             len(encodeds) // 8 + 1,
             "little")
         )
+
+
+def int_to_bin(n):
+    """
+    convertis d'un int vers une chaine de caractère binaire
+
+    paramètre:
+    n: notre int à convertir
+
+    return: chaine de caractère composée de "0" et de "1"
+    """
+    s = ""
+    while n>0 or s=="":
+        s = str(n%2) + s
+        n = n//2
+    return s
+
+def load_file_decode(path):
+    """
+    charge la table et la chaine encodée depuis un fichier spécifié
+    format:
+        header: 
+            identifieur "HCS" (Huffman Compressing System)  (3 octets)
+            taille table (octets)                           (4 octets)
+            taille chaine compressée (bits)                 (4 octets)
+        entrée de table:
+            taille clé de table                             (1 octet)
+            clé de table                                    (1 octet)
+            caractère ASCII                                 (1 octet)
+        chaine compressée:
+            valeur binaire                                  (équivalente à (taille chaine compressée)//8 + 1 bytes)
+            (optionel) padding                              (équivalente à (7-(taille chaine compressée))%8 bytes)
+    paramètres:
+    path: chemin d'accès vers le fichier depuis lequel nous souhaitons récupérer nos données compressées
+
+    return:
+    (bink: table de codage, pour décompresser les données
+    data: nos données compressées) ou None si le fichier n'est pas valide (aucune vérification n'est faite mise à part l'en-tête du fichier, du moins pour l'instant)
+    """
+
+    table_retour = {} #ce sera notre table
+
+    with open(path, "rb") as fichier:
+        # read permet de lire n octet.s
+        if fichier.read(3)!=b"HCS": #verifier que le fichier soit bien à notre format
+            print("Le fichier n'est pas au format HCS")
+            return None #il faudra détecter que la fonction ne retourne pas None.
+        taille_cle = int.from_bytes(f.read(4),"little") 
+        taille_donnes = int.from_bytes(f.read(4),"little") 
+
+        for _ in range(taille_cle//3): #boucle pour récupérer notre table, et en faire un dictionnaire
+            taille_cle_lettre = int.from_bytes(fichier.read(1), "little")
+            cle_lettre = int_to_bin(int.from_bytes(fichier.read(1), "little") & 2**taille_cle_lettre-1) #le & ici représente un opérateur "et" logique, cela sert à construire un masque de bits, pour récupérer seulement la partie qui nous intéresse dans l'octet.
+            table_retour[cle_lettre] = fichier.read(1).decode("ascii")
+        data = int_to_bin(int.from_bytes(fichier.read(taille_donnees//8+1), "little") & 2**taille_donnees-1) 
+    return table_retour,data
 
 
 if __name__ == "__main__":
