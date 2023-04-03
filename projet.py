@@ -236,7 +236,7 @@ def int_to_bin(n):
         n = n//2
     return s
 
-def loadFileDecode(path):
+def load_file_decode(path):
     """
     charge la table et la chaine encodée depuis un fichier spécifié
     format:
