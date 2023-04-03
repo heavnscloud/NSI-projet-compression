@@ -259,19 +259,20 @@ def load_file_decode(path):
     data: nos données compressées) ou None si le fichier n'est pas valide (aucune vérification n'est faite mise à part l'en-tête du fichier, du moins pour l'instant)
     """
 
-    bink = {} #ce sera notre table
+    table_retour = {} #ce sera notre table
 
-    with open(path, "rb") as f:
-        if f.read(3)!=b"HCS": #verifier que le fichier soit bien à notre format
-            print("the file is not a HCS file")
+    with open(path, "rb") as fichier:
+        # read permet de lire n octet.s
+        if fichier.read(3)!=b"HCS": #verifier que le fichier soit bien à notre format
+            print("Le fichier n'est pas au format HCS")
             return None #il faudra détecter que la fonction ne retourne pas None.
-        keylen = int.from_bytes(f.read(4),"little") 
-        datalen = int.from_bytes(f.read(4),"little") 
+        taille_cle = int.from_bytes(f.read(4),"little") 
+        taille_donnes = int.from_bytes(f.read(4),"little") 
 
-        for _ in range(keylen//3): #boucle pour récupérer notre table, et en faire un dictionnaire
-            bitlen = int.from_bytes(f.read(1), "little")
-            tmpk = inttobin(int.from_bytes(f.read(1), "little") & 2**bitlen-1) #le & ici représente un opérateur "et" logique, cela sert à construire un masque de bits, pour récupérer seulement la partie qui nous intéresse dans l'octet.
-            bink[tmpk] = f.read(1).decode("ascii")
-        data = inttobin(int.from_bytes(f.read(datalen//8+1), "little") & 2**datalen-1) 
-    return bink,data
+        for _ in range(taille_cle//3): #boucle pour récupérer notre table, et en faire un dictionnaire
+            taille_cle_lettre = int.from_bytes(fichier.read(1), "little")
+            cle_lettre = int_to_bin(int.from_bytes(fichier.read(1), "little") & 2**taille_cle_lettre-1) #le & ici représente un opérateur "et" logique, cela sert à construire un masque de bits, pour récupérer seulement la partie qui nous intéresse dans l'octet.
+            table_retour[cle_lettre] = fichier.read(1).decode("ascii")
+        data = int_to_bin(int.from_bytes(fichier.read(taille_donnees//8+1), "little") & 2**taille_donnees-1) 
+    return table_retour,data
 
