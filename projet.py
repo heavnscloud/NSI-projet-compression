@@ -31,7 +31,7 @@ def compte(texte):
 
 class Arbre:
     """
-    Code d'un arbre binaire spécialisé dans la compréssion de fichiers.
+    Code d'un arbre binaire spécialisé dans la **compression** de fichiers.
     Une feuille représente une lettre et le chemin jusqu'à la racine son code compréssé.
     Si ce n'est pas une feuille, la node ne DOIT pas contenir une lettre
     """
