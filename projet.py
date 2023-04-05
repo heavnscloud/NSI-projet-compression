@@ -20,12 +20,17 @@ def code(texte):
 
 
 def compte(texte):
+    """Ce code définit une fonction nommée compte qui prend en
+entrée une chaîne de caractères "texte" et renvoie un
+dictionnaire où les clés sont les caractères de la
+chaîne et les valeurs sont le nombre d'occurrences de
+chaque caractère."""
     dic = {}
-    for caractere in texte:
-        if caractere in dic:
-            dic[caractere] += 1
+    for caractere in texte: #la fonction utilise une boucle "for" pour parcourir chaque caractère de la chaîne
+        if caractere in dic: #instruction conditionnelle pour vérifier si le caractère est déjà présent dans le dictionnaire.
+            dic[caractere] += 1 #Si oui, la fonction incrémente la valeur associée à cette clé.
         else:
-            dic[caractere] = 1
+            dic[caractere] = 1 #Sinon, elle ajoute une nouvelle clé avec une valeur initiale de 1.
     return dic
 
 
@@ -148,18 +153,28 @@ def creer_table(arbre):
 
 
 def creer_table_auxiliaire(arbre, cle):
-    if arbre.lettre:
-        return {arbre.lettre: cle}
+    """Cette fonction prend en entrée un noeud arbre et une chaîne de caractères cle
+    qui représente le code binaire associé à la lettre en cours d'exploration.
+    Si arbre correspond à une feuille, c'est-à-dire si le noeud contient une lettre,
+    alors on retourne un dictionnaire contenant cette lettre comme clé et cle comme valeur."""
+
+    if arbre.lettre: #À chaque appel de la fonction, elle vérifie si le noeud courant contient un caractère (condition "if arbre.lettre:").
+        return {arbre.lettre: cle} #Si oui, elle retourne un dictionnaire qui contient la correspondance entre le caractère et le code binaire représenté par la clé "cle".
     else:
+        """Sinon, on appelle récursivement creer_table_auxiliaire sur le fils gauche de arbre
+        en ajoutant "0" à la fin de cle, puis sur le fils droit de arbre en ajoutant "1" à la
+        fin de cle. On combine ensuite les deux dictionnaires retournés à l'aide de la méthode
+        update et on retourne le dictionnaire résultant."""
         dico1 = creer_table_auxiliaire(arbre.gauche, cle + "0")
         dico1.update(creer_table_auxiliaire(arbre.droit, cle + "1"))
         return dico1
 
 
 def encoder_txt(tab, txt):
+    '''On crée une chaine de caractère vide et on la concatène avec chaque élément de la table prise en paramètre puis on la retourne'''
     liste = ''
     for c in txt:
-        liste += tab[c]
+        liste += tab[c]#concatenation entre liste et l'élément c de la table en paramètre
     return liste
 
 
