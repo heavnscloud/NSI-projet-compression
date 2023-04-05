@@ -43,7 +43,7 @@ class Arbre:
         :param gauche: noeud gauche de l'arbre, si c'est une lettre vide
         :param droite: noeud droit de l'arbre, vide si c'est une lettre
         :param lettre: Indique si c'est une lettre, vide sinon
-        :param poid: le poid du noeud dans l'algorithme de création de l'arbre, vide si ce n'est pas une feuille car il sera automatiquement rempli avec le poid de ses fils
+        :param poid: le poids du noeud dans l'algorithme de création de l'arbre, vide si ce n'est pas une feuille car il sera automatiquement rempli avec le poids de ses fils
         """
         self.gauche = gauche
         self.droit = droit
