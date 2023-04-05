@@ -70,11 +70,17 @@ class Arbre:
 
         return decalage
 
+    def __eq__():
+        pass
+
 
 def creer_arbre(dictionnaire_lettres):
     arbres = []
     for item in dictionnaire_lettres.items():
         arbres.append(Arbre(None, None, lettre=item[0], poid=item[1]))
+
+    if (len(arbres) == 0):
+        return None
 
     def poid(arbre):
         return arbre.poid
@@ -288,3 +294,12 @@ if __name__ == "__main__":
     print(current_val)
     print(bin_to_int(current_val))
     print(decode(*main()))
+
+    # Fonction main
+
+    assert main() is None
+
+    # Fonction creer_arbre
+
+    assert creer_arbre({}) == None
+    assert creer_arbre({"a": 3, "b": 3}) == Arbre(Arbre(None, None, "a", 3), Arbre(None, None, "b", 3))
