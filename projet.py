@@ -138,9 +138,13 @@ def creer_arbre(dictionnaire_lettres):
 
 
 def creer_table(arbre):
-    dico1 = creer_table_auxiliaire(arbre.gauche, "0")
-    dico1.update(creer_table_auxiliaire(arbre.droit, "1"))
-    return dico1
+    '''Cette fonction prend en paramètre un arbre.
+    Elle permet de créer un dictionnaire associant un caractère à une suite de nombre binaire.
+    Elle renvoie un dictionnaire.
+    '''
+    dico1 = creer_table_auxiliaire(arbre.gauche, "0")  # initialise dico1 en appelant la fonction creer_table_auxiliaire avec en paramètre arbre.gauche et "0"
+    dico1.update(creer_table_auxiliaire(arbre.droit, "1"))  # modifie dico1 en appelant creer_table_auxiliaire avec en paramètre arbre.droit et "1"
+    return dico1  # renvoie le dictionnaire dico1
 
 
 def creer_table_auxiliaire(arbre, cle):
@@ -160,19 +164,20 @@ def encoder_txt(tab, txt):
 
 
 def decoder_txt(tab, texte):
-    '''Cette fonction prend en paramètre une liste et une suite de nombres binaires.
+    '''Cette fonction prend en paramètre une liste et une suite de caractères de nombre binaire.
+
     Elle permet de traduire le texte binaire.
     Elle renvoie un texte.
     '''
-    txt = ''
+    txt = ''  # initialise txt et num en chaine de caractères vides
     num = ''
-    for c in texte:
-        num += c
-        for item in tab.items(): # .items() récupère une liste de tuples (cle, valeur)
-            if num == item[1]:
-                txt += item[0]
-                num = ''
-    return txt
+    for c in texte:  # parcours des éléments de texte
+        num += c  # ajoute un élément de texte dans num
+        for item in tab.items():  # .items() récupère une liste de tuples (cle, valeur)
+            if num == item[1]:  # si num est égale à l'une des valeurs de tab
+                txt += item[0]  # récupère la clé associé à cette valeur dans txt
+                num = ''  # affecte une chaine de caractères vide à num
+    return txt  # renvoie le txt
 
 
 def save_file(path, s):
