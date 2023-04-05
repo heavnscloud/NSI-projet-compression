@@ -30,10 +30,25 @@ def compte(texte):
 
 
 class Arbre:
+    """
+    Code d'un arbre binaire spécialisé dans la compréssion de fichiers.
+    Une feuille représente une lettre et le chemin jusqu'à la racine son code compréssé.
+    Si ce n'est pas une feuille, la node ne DOIT pas contenir une lettre
+    """
+
     def __init__(self, gauche, droit, lettre=None, poid=0):
+        """
+        Permet d'initialiser l'arbre. Un arbre peut-être noeud d'un autre arbre.
+
+        :param gauche: noeud gauche de l'arbre, si c'est une lettre vide
+        :param droite: noeud droit de l'arbre, vide si c'est une lettre
+        :param lettre: Indique si c'est une lettre, vide sinon
+        :param poid: le poid du noeud dans l'algorithme de création de l'arbre, vide si ce n'est pas une feuille car il sera automatiquement rempli avec le poid de ses fils
+        """
         self.gauche = gauche
         self.droit = droit
         self.lettre = lettre
+        # Poids des fils
         if self.gauche:
             poid += self.gauche.poid
         if self.droit:
@@ -41,30 +56,44 @@ class Arbre:
         self.poid = poid
 
     def afficher(self):
+        """
+        Permet d'afficher l'arbre pendant le debug sous forme d'un arbre, racine en haut, et en minimisant la place occupée
+        """
+        # Lignes à remplir en auxiliaire
         strings = {}
+        # On commence par la racine
         self.auxiliaire_afficher(0, 0, strings)
-        current = 0
-        while current in strings:
-            print(strings[current])
-            current += 1
+        for texte in strings:
+            print(texte)
 
     def auxiliaire_afficher(self, etage_noeud, decalage, liste_etages):
+        """
+        Fonction auxiliaire récursive de afficher, avec un parcours infixe
+
+        :param etage_noeud: étage actuel du noeud, 1 de + que son père, et position dans liste_etage du string à modifier
+        :param decalage: permet décaler sur la droite l'affichage du nom du noeud, ainsi permet d'aligner tout
+        :param liste_etages: dictionnaire des strings donnée récursivement à modifier
+        """
+
+        # Permet de gérer le cas de None
         lettre = (self.lettre if self.lettre else "")
 
+        # Début de l'infixe : on print le noeud de gauche et on décale
         if self.gauche is not None:
             decalage = self.gauche.auxiliaire_afficher(etage_noeud + 1, decalage, liste_etages)
 
         # Permet de s'ajouter à la liste tout en gardant les nœuds à gauche et en prenant en compte le décalage
         liste_etages[etage_noeud] = \
-            (
+            ( # Décalage
                 (
                         liste_etages[etage_noeud] + " " * (decalage - len(liste_etages[etage_noeud]))
                 ) if (
                         etage_noeud in liste_etages
                 ) else " " * decalage
-            ) + str(self.poid) + lettre
+            ) + str(self.poid) + lettre # Affichage
         decalage += len(str(self.poid) + lettre)
 
+        # Même chose pour droit
         if self.droit is not None:
             decalage = self.droit.auxiliaire_afficher(etage_noeud + 1, decalage, liste_etages)
 
@@ -72,14 +101,24 @@ class Arbre:
 
 
 def creer_arbre(dictionnaire_lettres):
+    """
+    Permet de créer l'arbre de compréssion d'après l'algorithme
+
+    :param dictionnaire_lettres: lettre -> nombre d'occurences
+    """
+
+    # Initialisation : chaque lettre devient un noeud de poid occurence
     arbres = []
     for item in dictionnaire_lettres.items():
         arbres.append(Arbre(None, None, lettre=item[0], poid=item[1]))
 
+    # Fonction pour comparer
     def poid(arbre):
         return arbre.poid
 
     arbres.sort(key=poid)
+
+    # Boucle principale : on fusionne deux par deux les arbres jusqu'à obtenir un unique arbre
     while len(arbres) > 1:
         a0 = arbres.pop(0)
         a1 = arbres.pop(0)
@@ -120,7 +159,7 @@ def encoder_txt(tab, txt):
     return liste
 
 
-def decoder_txt (tab, texte):
+def decoder_txt(tab, texte):
     '''Cette fonction prend en paramètre une liste et une suite de nombres binaires.
     Elle permet de traduire le texte binaire.
     Elle renvoie un texte.
