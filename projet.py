@@ -99,6 +99,8 @@ def creer_arbre(dictionnaire_lettres):
 
 
 def creer_table(arbre):
+    '''
+    '''
     dico1 = creer_table_auxiliaire(arbre.gauche, "0")
     dico1.update(creer_table_auxiliaire(arbre.droit, "1"))
     return dico1
