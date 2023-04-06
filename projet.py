@@ -36,7 +36,7 @@ def compte(texte):
     et les valeurs, le nombre d'occurrences de chaque caractère.
     '''
     dic = {}
-    for caractere in texte: #Parcours chaque caractère du texte
+    for caractere in texte: #Parcours chaque caractères du texte
         if caractere in dic: #Condition qui vérifie si le caractère est déjà présent dans le dictionnaire
             dic[caractere] += 1 #Si oui, la fonction incrémente de 1 la valeur associée à cette clé
         else:
@@ -174,28 +174,35 @@ def creer_table_auxiliaire(arbre, cle):
         return dico1
 
 
-def encoder_txt(tab, txt):
-    liste = ''
-    for c in txt:
-        liste += tab[c]
-    return liste
+def encoder_txt(tab, texte):
+    '''
+    Cette fonction prend en paramètre un dictionnaire 'tab' et une chaîne
+    de caractères 'texte' et renvoie le texte codé.
+    '''
+    txt = ''
+    for c in texte: #Parcours chaque caractère du texte
+        txt += tab[c] #Ajoute dans 'txt' la valeur associée à la clé 'c' dans 'tab'
+    return txt
+
+assert encoder_txt({'e': '0', 'x': '10', 't': '11'}, 'texte') == '11010110'
 
 
 def decoder_txt(tab, texte):
-    '''Cette fonction prend en paramètre une liste et une suite de caractères de nombre binaire.
-
-    Elle permet de traduire le texte binaire.
-    Elle renvoie un texte.
     '''
-    txt = ''  # initialise txt et num en chaine de caractères vides
+    Cette fonction prend en paramètre un dictionnaire 'tab' et une chaîne
+    de nombres binaire 'texte' et renvoie le texte décodé.
+    '''
+    txt = ''
     num = ''
-    for c in texte:  # parcours des éléments de texte
-        num += c  # ajoute un élément de texte dans num
-        for item in tab.items():  # .items() récupère une liste de tuples (cle, valeur)
-            if num == item[1]:  # si num est égale à l'une des valeurs de tab
-                txt += item[0]  # récupère la clé associé à cette valeur dans txt
-                num = ''  # affecte une chaine de caractères vide à num
-    return txt  # renvoie le txt
+    for c in texte: #Parcours chaque caractère du texte
+        num += c #Ajoute le caractère dans 'num'
+        for item in tab.items(): #Parcours chaque tuples (clé, valeur) de 'tab'
+            if num == item[1]: #Si num est égale à l'une des valeurs de 'tab'
+                txt += item[0] #Ajoute la clé associée à cette valeur dans txt
+                num = '' #Initialise 'num' à une chaine de caractères vide
+    return txt
+
+assert decoder_txt({'e': '0', 'x': '10', 't': '11'}, '11010110') == 'texte'
 
 
 def save_file(path, s):
