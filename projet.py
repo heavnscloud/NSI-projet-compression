@@ -204,7 +204,9 @@ def decoder_txt(tab, texte):
                 num = '' # Reset la variable afin de passer au caractère suivant du texte d'origine
     return txt
 
-assert decoder_txt({'e': '0', 'x': '10', 't': '11'}, '11010110') == 'texte'
+if __name__ == "__main__":
+    print("Testing decoder_txt ...")
+    assert decoder_txt({'e': '0', 'x': '10', 't': '11'}, '11010110') == 'texte'
 
 
 def save_file(path, s):
