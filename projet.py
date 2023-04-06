@@ -168,9 +168,18 @@ def creer_table(arbre):
 
 
 def creer_table_auxiliaire(arbre, cle):
-    if arbre.lettre:
-        return {arbre.lettre: cle}
+    """Cette fonction prend en entrée un noeud arbre et une chaîne de caractères cle
+    qui représente le code binaire associé à la lettre en cours d'exploration.
+    Si arbre correspond à une feuille, c'est-à-dire si le noeud contient une lettre,
+    alors on retourne un dictionnaire contenant cette lettre comme clé et cle comme valeur."""
+
+    if arbre.lettre: #À chaque appel de la fonction, elle vérifie si le noeud courant contient un caractère (condition "if arbre.lettre:").
+        return {arbre.lettre: cle} #Si oui, elle retourne un dictionnaire qui contient la correspondance entre le caractère et le code binaire représenté par la clé "cle".
     else:
+        """Sinon, on appelle récursivement creer_table_auxiliaire sur le fils gauche de arbre
+        en ajoutant "0" à la fin de cle, puis sur le fils droit de arbre en ajoutant "1" à la
+        fin de cle. On combine ensuite les deux dictionnaires retournés à l'aide de la méthode
+        update et on retourne le dictionnaire résultant."""
         dico1 = creer_table_auxiliaire(arbre.gauche, cle + "0")
         dico1.update(creer_table_auxiliaire(arbre.droit, cle + "1"))
         return dico1
