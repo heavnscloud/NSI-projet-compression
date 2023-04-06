@@ -25,8 +25,10 @@ def code(texte):
     table = creer_table(arbre) #Initialise la variable 'table' à un dictionnaire des codes binaires des caractères de 'texte'
     return table, encoder_txt(table, texte)
 
-assert code('') == None
-assert code('texte') == ({'e': '0', 'x': '10', 't': '11'}, '11010110')
+if __name__ == "__main__":
+    print("Testing code function ...")
+    assert code('') == None
+    assert code('texte') == ({'e': '0', 'x': '10', 't': '11'}, '11010110')
 
 
 def compte(texte):
