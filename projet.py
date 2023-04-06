@@ -199,7 +199,7 @@ def decoder_txt(tab, texte):
         for item in tab.items(): #Parcours chaque tuples (clé, valeur) de 'tab'
             if num == item[1]: #Si num est égale à l'une des valeurs de 'tab'
                 txt += item[0] #Ajoute la clé associée à cette valeur dans txt
-                num = '' #Initialise 'num' à une chaine de caractères vide
+                num = '' # Reset la variable afin de passer au caractère suivant du texte d'origine
     return txt
 
 assert decoder_txt({'e': '0', 'x': '10', 't': '11'}, '11010110') == 'texte'
