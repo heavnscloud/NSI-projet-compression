@@ -13,20 +13,38 @@ def main():
 
 
 def code(texte):
-    dic = compte(texte)
-    arbre = creer_arbre(dic)
-    table = creer_table(arbre)
+    '''
+    Cette fonction prend en paramètre une chaîne de caractères 'texte'
+    et renvoie un dictionnaire 'table' où les clés sont les caractères de la chaîne
+    et les valeurs, le code binaire de chaque caractère, et le texte encodé.
+    '''
+    if texte == '': #Cas du texte vide
+        return None
+    dic = compte(texte) #Initialise la variable 'dic' à un dictionnaire d’occurrence des caractères de 'texte'
+    arbre = creer_arbre(dic) #Initialise la variable 'arbre' à un arbre binaire des occurrences des caractères de 'texte'
+    table = creer_table(arbre) #Initialise la variable 'table' à un dictionnaire des codes binaires des caractères de 'texte'
     return table, encoder_txt(table, texte)
+
+assert code('') == None
+assert code('texte') == ({'e': '0', 'x': '10', 't': '11'}, '11010110')
 
 
 def compte(texte):
+    '''
+    Cette fonction prend en paramètre une chaîne de caractères 'texte'
+    et renvoie un dictionnaire 'dic' où les clés sont les caractères de la chaîne
+    et les valeurs, le nombre d'occurrences de chaque caractère.
+    '''
     dic = {}
-    for caractere in texte:
-        if caractere in dic:
-            dic[caractere] += 1
+    for caractere in texte: #Parcours chaque caractère du texte
+        if caractere in dic: #Condition qui vérifie si le caractère est déjà présent dans le dictionnaire
+            dic[caractere] += 1 #Si oui, la fonction incrémente de 1 la valeur associée à cette clé
         else:
-            dic[caractere] = 1
+            dic[caractere] = 1 #Sinon, elle crée une nouvelle clé dont la valeur est initialisée à 1
     return dic
+
+assert compte('') == {}
+assert compte('texte') == {'t': 2, 'e': 2, 'x': 1}
 
 
 class Arbre:
