@@ -184,7 +184,9 @@ def encoder_txt(tab, texte):
         txt += tab[c] #Ajoute dans 'txt' la valeur associée à la clé 'c' dans 'tab'
     return txt
 
-assert encoder_txt({'e': '0', 'x': '10', 't': '11'}, 'texte') == '11010110'
+if __name__ == "__main__":
+    print("Testing encoder_txt ...")
+    assert encoder_txt({'e': '0', 'x': '10', 't': '11'}, 'texte') == '11010110'
 
 
 def decoder_txt(tab, texte):
